@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Меню тижня</title>
+<style>
+:root{--bg:#f4f5f1;--card:#fff;--ink:#1f2522;--muted:#6d7772;--line:#e6e8e3;--accent:#1f7a4d;--accent-ink:#fff;--soft:#e6f3ec;--chip:#f1f3ef;--bad:#b3261e;--bad-soft:#fdecea;--shadow:0 1px 2px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.05)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111513;--card:#1a1f1d;--ink:#e9ede9;--muted:#9ba59f;--line:#2a312e;--accent:#4cc38a;--accent-ink:#0c1d14;--soft:#17301f;--chip:#232a27;--bad:#f2b8b5;--bad-soft:#3a1d1b;--shadow:none}}
+:root[data-theme="dark"]{--bg:#111513;--card:#1a1f1d;--ink:#e9ede9;--muted:#9ba59f;--line:#2a312e;--accent:#4cc38a;--accent-ink:#0c1d14;--soft:#17301f;--chip:#232a27;--bad:#f2b8b5;--bad-soft:#3a1d1b;--shadow:none}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:96px}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px}
+.demo{font-size:12.5px;color:var(--muted);text-align:center;margin:0 0 14px}
+h1{font-size:24px;line-height:1.2;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 18px}
+
+/* вибір покупця */
+.who{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.who::-webkit-scrollbar{display:none}
+.who button{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:9px 13px 9px 10px;font-size:14.5px;box-shadow:var(--shadow)}
+.who button .e{font-size:20px}
+.who button[aria-pressed=true]{border-color:var(--accent);background:var(--soft);font-weight:600}
+
+/* підсумок */
+.hero{background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hero-name{font-weight:650;font-size:17px}
+.hero-sub{color:var(--muted);font-size:13.5px}
+.edit{border:0;background:var(--chip);border-radius:10px;padding:7px 12px;font-size:14px;white-space:nowrap}
+.sum{display:flex;align-items:baseline;gap:8px;margin:16px 0 8px;flex-wrap:wrap}
+.sum b{font-size:32px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.sum span{color:var(--muted);font-size:15px}
+.bar{height:8px;border-radius:4px;background:var(--chip);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .35s}
+.hero.over .bar i{background:var(--bad)}
+.overmsg{color:var(--bad);font-size:13.5px;margin:6px 0 0}
+.facts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.fact{background:var(--soft);color:var(--accent);border-radius:999px;padding:5px 11px;font-size:13.5px;font-weight:600}
+.fact.n{background:var(--chip);color:var(--ink);font-weight:500}
+
+h2{font-size:18px;margin:26px 0 10px}
+/* страви */
+.dish{display:flex;gap:12px;background:var(--card);border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow);transition:background .4s}
+.dish.new{background:var(--soft)}
+.pic{flex:0 0 48px;height:48px;border-radius:14px;background:var(--chip);display:grid;place-items:center;font-size:26px}
+.dbody{flex:1;min-width:0}
+.dday{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.dbody h3{margin:1px 0 6px;font-size:16px;line-height:1.3}
+.pills{display:flex;flex-wrap:wrap;gap:5px}
+.pill{font-size:12.5px;background:var(--chip);border-radius:999px;padding:2px 9px;color:var(--muted)}
+.pill.g{background:var(--soft);color:var(--accent)}
+.dacts{display:flex;flex-direction:column;gap:6px}
+.ibtn{border:0;background:var(--chip);border-radius:10px;width:38px;height:38px;font-size:17px;display:grid;place-items:center}
+.ibtn[aria-pressed=true]{background:var(--soft)}
+.empty{background:var(--card);border-radius:16px;padding:16px;color:var(--muted);text-align:center}
+
+/* список покупок */
+details.shop{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin-top:10px}
+details.shop summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px;cursor:pointer;font-weight:600}
+details.shop summary::-webkit-details-marker{display:none}
+details.shop summary small{color:var(--muted);font-weight:400;font-size:13.5px;display:block}
+.chev{transition:transform .2s;color:var(--muted)}
+details[open] .chev{transform:rotate(180deg)}
+.shop-body{padding:0 16px 12px}
+.shop-body h4{margin:12px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:15px}
+.item small{display:block;color:var(--muted);font-size:12.5px}
+.price{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.price s{display:block;color:var(--muted);font-size:12px}
+.sale{color:var(--accent);font-weight:600}
+.more{margin-top:26px;color:var(--muted);font-size:13.5px}
+.more summary{cursor:pointer}
+.more ol{padding-left:20px;margin:8px 0}
+
+/* нижня панель */
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.dock-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.dock-sum{flex:1;line-height:1.2}
+.dock-sum b{font-size:18px;font-variant-numeric:tabular-nums}
+.dock-sum small{display:block;color:var(--accent);font-size:13px}
+.cta{border:0;background:var(--accent);color:var(--accent-ink);border-radius:14px;padding:13px 20px;font-weight:650;font-size:16px}
+
+/* панель налаштувань */
+dialog{border:0;padding:0;width:100%;max-width:560px;margin:auto auto 0;border-radius:22px 22px 0 0;background:var(--card);color:var(--ink);max-height:88vh}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+@media (min-width:640px){dialog{margin:auto;border-radius:22px}}
+.sheet{padding:18px 18px 0;overflow:auto;max-height:calc(88vh - 76px)}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sheet-h h3{margin:0;font-size:19px}
+.q{margin:18px 0}
+.q > b{display:block;font-size:15px;margin-bottom:8px}
+.q > b span{font-weight:400;color:var(--muted);font-size:13px}
+.stepper{display:flex;align-items:center;gap:14px}
+.stepper button{width:42px;height:42px;border-radius:12px;border:0;background:var(--chip);font-size:22px}
+.stepper output{font-size:18px;font-weight:600;min-width:80px;text-align:center}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1.5px solid transparent;background:var(--chip);border-radius:999px;padding:7px 13px;font-size:14.5px}
+.chip[aria-pressed=true]{background:var(--soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.chips.no .chip[aria-pressed=true]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.sheet-f{padding:12px 18px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.sheet-f .cta{width:100%}
+.link{border:0;background:none;color:var(--accent);padding:0;font-size:14px;text-decoration:underline}
+
+.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%) translateY(12px);background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:12px;font-size:14px;display:flex;gap:14px;align-items:center;opacity:0;visibility:hidden;transition:.2s;width:max-content;max-width:calc(100% - 32px);z-index:5}
+.toast.show{opacity:1;visibility:visible;transform:translateX(-50%)}
+.toast button{border:0;background:none;color:var(--bg);font-weight:700;text-decoration:underline;padding:0}
+@media print{.dock,.dacts,.who,.edit,.toast{display:none}body{padding:0}details.shop{display:block}}
+</style></head><body>
+<div class="wrap">
+  <p class="demo">Демо для обговорення · ціни умовні</p>
+  <h1>Меню на тиждень з акцій</h1>
+  <p class="lead">Під ваші смаки й бюджет. Купуєте цілими упаковками — нічого зайвого.</p>
+
+  <div class="who" id="who" role="group" aria-label="Для кого меню"></div>
+
+  <section class="hero" id="hero" aria-live="polite">
+    <div class="hero-top">
+      <div><div class="hero-name" id="h-name"></div><div class="hero-sub" id="h-sub"></div></div>
+      <button class="edit" id="open" type="button">⚙️ Налаштувати</button>
+    </div>
+    <div class="sum"><b id="h-total"></b><span id="h-budget"></span></div>
+    <div class="bar"><i id="h-bar"></i></div>
+    <p class="overmsg" id="h-over" hidden></p>
+    <div class="facts" id="h-facts"></div>
+  </section>
+
+  <h2 id="menu-h">Що готуємо</h2>
+  <div id="menu"></div>
+
+  <details class="shop" id="shop">
+    <summary><div>Список покупок<small id="shop-sub"></small></div><span class="chev">▾</span></summary>
+    <div class="shop-body" id="list"></div>
+  </details>
+
+  <details class="more">
+    <summary>Як це працює</summary>
+    <ol>
+      <li>Мережа щотижня передає акції, ціни й розміри упаковок.</li>
+      <li>Код підбирає страви під вподобання: акційні інгредієнти, ті, що доїдають уже відкриті упаковки, різноманітність.</li>
+      <li>👍 і заміни уточнюють наступне меню; за згодою покупця враховується історія покупок з картки.</li>
+    </ol>
+    <p id="source"></p>
+  </details>
+</div>
+
+<div class="dock"><div class="dock-in">
+  <div class="dock-sum"><b id="d-total"></b><small id="d-save"></small></div>
+  <button class="cta" id="cta" type="button">Усе в кошик</button>
+</div></div>
+
+<dialog id="sheet" aria-labelledby="sheet-title">
+  <div class="sheet">
+    <div class="sheet-h"><h3 id="sheet-title">Про вас</h3><button class="link" id="reset" type="button">Скинути</button></div>
+    <div class="q"><b>Скільки людей їсть</b>
+      <div class="stepper"><button type="button" data-step="-1" aria-label="Менше">−</button><output id="o-people"></output><button type="button" data-step="1" aria-label="Більше">+</button></div></div>
+    <div class="q"><b>Бюджет на тиждень</b><div class="chips" id="c-budget"></div></div>
+    <div class="q"><b>Скільки часу на вечерю</b><div class="chips" id="c-time"></div></div>
+    <div class="q"><b>Скільки вечерь</b><div class="chips" id="c-days"></div></div>
+    <div class="q"><b>Що любите <span>· можна кілька</span></b><div class="chips" id="c-likes"></div></div>
+    <div class="q"><b>Чого не їсте</b><div class="chips no" id="c-dislikes"></div></div>
+    <div class="q" id="q-ex" hidden><b>Прибрані страви</b><div class="chips" id="c-ex"></div></div>
+  </div>
+  <div class="sheet-f"><button class="cta" id="close" type="button">Показати меню</button></div>
+</dialog>
+
+<div class="toast" id="toast" role="status"><span id="toast-t"></span><button id="toast-b" type="button" hidden>Повернути</button></div>
+
+<script>
+// id: [назва, упаковка, од., звичайна ціна, акційна ціна або null, група]
+const PRODUCTS = {
+  thighs:["Стегно куряче охолоджене",2000,"г",279,229,"М'ясо і риба"],
+  breast:["Філе куряче",1000,"г",219,null,"М'ясо і риба"],
+  liver:["Печінка куряча",500,"г",79,62,"М'ясо і риба"],
+  mince:["Фарш свино-яловичий",500,"г",129,null,"М'ясо і риба"],
+  pork:["Свинина на кістці для борщу",1000,"г",189,159,"М'ясо і риба"],
+  hake:["Філе хека морожене",800,"г",239,189,"М'ясо і риба"],
+  eggs:["Яйця С1",10,"шт",64.9,52.9,"Молочне і яйця"],
+  cottage:["Сир кисломолочний 5%",400,"г",74.9,59.9,"Молочне і яйця"],
+  cheese:["Сир твердий",200,"г",89.9,null,"Молочне і яйця"],
+  sourcream:["Сметана 15%",300,"г",42.9,34.9,"Молочне і яйця"],
+  potato:["Картопля мита",2500,"г",69,54.9,"Овочі"],
+  carrot:["Морква",1000,"г",24.9,null,"Овочі"],
+  onion:["Цибуля ріпчаста",1000,"г",22.9,null,"Овочі"],
+  cabbage:["Капуста білокачанна",1500,"г",29.9,21.9,"Овочі"],
+  beet:["Буряк столовий",1000,"г",19.9,null,"Овочі"],
+  mushroom:["Печериці",400,"г",59.9,44.9,"Овочі"],
+  pepper:["Перець солодкий",500,"г",69.9,null,"Овочі"],
+  rice:["Рис довгозернистий",900,"г",64.9,null,"Бакалія"],
+  buckwheat:["Гречка ядриця",1000,"г",54.9,44.9,"Бакалія"],
+  pasta:["Макарони ріжки",800,"г",39.9,29.9,"Бакалія"],
+  beans:["Квасоля консервована",400,"г",44.9,36.9,"Бакалія"],
+  tomatoes:["Томати в соку",400,"г",49.9,null,"Бакалія"],
+  flour:["Борошно пшеничне",1000,"г",29.9,null,"Бакалія"],
+  tomatop:["Томатна паста",140,"г",26.9,null,"Бакалія"],
+  oil:["Олія соняшникова",850,"мл",69.9,null,"Бакалія"],
+};
+const PERISHABLE = new Set(["thighs","breast","liver","mince","pork","hake","eggs","cottage","cheese","sourcream","mushroom","pepper"]);
+const PANTRY = new Set(["oil","rice","buckwheat","flour","tomatop"]);
+const MEATY = new Set(["курка","печінка","фарш","свинина","риба"]);
+// Рецепти на 4 порції: [назва, хв, теги, головний білок, інгредієнти, емодзі]
+const RECIPES = [
+  ["Курячі стегна з картоплею в духовці",60,["курка","дітям","класика"],"курка",{thighs:1000,potato:1000,carrot:150,oil:40},"🍗"],
+  ["Плов з куркою",70,["курка","класика"],"курка",{thighs:1000,rice:450,carrot:300,onion:200,oil:80},"🍛"],
+  ["Курячі котлети з гречкою",45,["курка","дітям"],"курка",{breast:700,eggs:1,onion:100,buckwheat:400,oil:40},"🍽️"],
+  ["Гречка з печінкою та грибами",40,["печінка","класика"],"печінка",{buckwheat:400,liver:500,mushroom:400,onion:200,sourcream:150},"🍲"],
+  ["Макарони по-флотськи",30,["свинина","дітям","швидко"],"фарш",{pasta:800,mince:500,onion:200,tomatop:70,oil:30},"🍝"],
+  ["Борщ зі свининою",120,["свинина","класика"],"свинина",{pork:1000,beet:600,cabbage:700,potato:700,carrot:200,onion:150,tomatop:70,sourcream:150},"🥣"],
+  ["Хек запечений з овочами",40,["риба"],"риба",{hake:800,carrot:200,onion:150,potato:800,oil:30},"🐟"],
+  ["Сирники зі сметаною",30,["вегетаріанське","дітям","швидко"],"сир",{cottage:800,eggs:2,flour:120,sourcream:150,oil:50},"🥞"],
+  ["Овочевий суп з квасолею",40,["вегетаріанське","швидко"],"бобові",{beans:800,potato:500,carrot:200,onion:100,tomatoes:400},"🥕"],
+  ["Тушкована капуста з печерицями",40,["вегетаріанське","класика"],"гриби",{cabbage:1000,mushroom:400,carrot:200,onion:100,tomatop:70,oil:40},"🍄"],
+  ["Омлет з перцем і сиром",15,["вегетаріанське","швидко","дітям"],"яйця",{eggs:8,pepper:250,cheese:100,oil:20},"🍳"],
+  ["Макарони з сиром і томатами",20,["вегетаріанське","швидко","дітям"],"сир",{pasta:800,cheese:100,tomatoes:400,onion:100,oil:20},"🧀"],
+  ["Рис з овочами та яйцем",25,["вегетаріанське","швидко"],"яйця",{rice:400,eggs:4,pepper:250,carrot:150,onion:100,oil:30},"🍚"],
+];
+const LIKES = [["курка","🍗 курка"],["свинина","🥩 свинина"],["риба","🐟 риба"],["класика","🏡 домашня класика"],["дітям","🧒 дітям"],["швидко","⚡ швидко"],["вегетаріанське","🥦 без м'яса"]];
+const DISLIKES = {"печінка":["liver"],"гриби":["mushroom"],"риба":["hake"],"свинина":["pork","mince"],"курка":["thighs","breast"],"молочне":["cottage","cheese","sourcream"]};
+const BUDGETS = [500,700,950,1100,1500];
+const TIMES = [[30,"до 30 хв"],[45,"до 45 хв"],[75,"до 75 хв"],[150,"неважливо"]];
+const PRESETS = [
+  {e:"👨‍👩‍👧‍👦",short:"Сім'я з дітьми",name:"Сім'я з двома дітьми",people:4,budget:1100,likes:["курка","дітям"],dislikes:["печінка","гриби"],time:75,days:5,
+   source:"Вподобання: анкета + 👍 до котлет і запеченої курки."},
+  {e:"🥗",short:"Пара без м'яса",name:"Пара без м'яса, мало часу",people:2,budget:700,likes:["швидко","вегетаріанське"],dislikes:[],time:40,days:5,
+   source:"Вподобання: анкета — вегетаріанці, готують до 40 хв."},
+  {e:"🍲",short:"Домашня класика",name:"Любителі домашньої класики",people:3,budget:950,likes:["класика","свинина"],dislikes:["риба"],time:150,days:5,
+   source:"Вподобання: історія покупок з картки (за згодою) — свинина, буряк, гречка."},
+];
+const DAYS = ["Понеділок","Вівторок","Середа","Четвер","П'ятниця"];
+
+let S = {}, presetIdx = 0, prevMenu = [];
+
+const price = p => PRODUCTS[p][4] ?? PRODUCTS[p][3];
+const plural = (n,a,b,c) => (n%10===1&&n%100!==11)?a:(n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14))?b:c;
+const short = p => PRODUCTS[p][0].split(" ").slice(0,2).join(" ").toLowerCase();
+const inter = (tags, set) => tags.filter(t => set.has(t)).sort();
+const veg = () => S.likes.has("вегетаріанське");
+function uah(x, cents=true){
+  const [i,f] = x.toFixed(2).split(".");
+  const s = i.replace(/\B(?=(\d{3})+(?!\d))/g," ");
+  return (cents && f !== "00" ? s + "," + f : s) + " ₴";
+}
+function qty(q,u){
+  q = Math.round(q*10)/10;
+  if ((u==="г"||u==="мл") && q>=1000) return (+(q/1000).toFixed(2)) + " " + (u==="г"?"кг":"л");
+  return (+q.toFixed(1)) + " " + u;
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function allowed(r){
+  const [title, min, tags, protein, ingr] = r;
+  if (min > S.time) return false;
+  if (veg() && MEATY.has(protein)) return false;
+  if (S.excluded.has(title)) return false;
+  for (const d of S.dislikes){
+    if (tags.includes(d) || protein===d) return false;
+    if ((DISLIKES[d]||[]).some(p => p in ingr)) return false;
+  }
+  return true;
+}
+
+function plan(){
+  const likes = new Set(S.likes);
+  const chosen = [], opened = new Set(), proteins = {};
+  let pool = RECIPES.filter(allowed);
+  for (let d=0; d<S.days; d++){
+    let best=null, bestScore=-1e9, bestWhy=null;
+    for (const r of pool){
+      const [title, , tags, protein, ingr] = r;
+      const pref = inter(tags, likes).length + (S.liked.has(title) ? 1.5 : 0);
+      let cost=0, saving=0;
+      for (const [p,q] of Object.entries(ingr)){ cost += q/PRODUCTS[p][1]*PRODUCTS[p][3]; saving += q/PRODUCTS[p][1]*(PRODUCTS[p][3]-price(p)); }
+      const promoShare = cost ? saving/cost : 0;
+      const fresh = Object.keys(ingr).filter(p => PERISHABLE.has(p));
+      const reuse = fresh.filter(p => opened.has(p));
+      const overlap = fresh.length ? reuse.length/fresh.length : 0;
+      const penalty = (proteins[protein]||0) >= 2 ? 2 : (proteins[protein] ? 0.6 : 0);
+      const score = 2*pref + 6*promoShare + 1.5*overlap - penalty;
+      if (score > bestScore){
+        const why = [];
+        if (S.liked.has(title)) why.push(["g","♥ ви вподобали"]);
+        const lk = inter(tags, likes).map(t => t === "вегетаріанське" ? "без м'яса" : t);
+        if (lk.length) why.push(["g","♥ " + lk.join(", ")]);
+        const nPromo = Object.keys(ingr).filter(p => PRODUCTS[p][4] !== null).length;
+        if (nPromo) why.push(["g",`🏷 ${nPromo} в акції`]);
+        if (reuse.length) why.push(["","♻ доїдаємо " + reuse.map(short).join(", ")]);
+        best=r; bestScore=score; bestWhy=why;
+      }
+    }
+    if (!best) break;
+    chosen.push({r:best, why:bestWhy});
+    proteins[best[3]] = (proteins[best[3]]||0) + 1;
+    Object.keys(best[4]).forEach(p => { if (PERISHABLE.has(p)) opened.add(p); });
+    pool = pool.filter(x => x[0] !== best[0]);
+  }
+  return chosen;
+}
+
+function basket(chosen){
+  const need = {};
+  for (const {r} of chosen) for (const [p,q] of Object.entries(r[4])) need[p] = (need[p]||0) + q*S.people/4;
+  const lines = []; let total=0, regular=0;
+  for (const [p,q] of Object.entries(need)){
+    const [name, pack, unit, reg, promo, group] = PRODUCTS[p];
+    const packs = Math.ceil(q/pack - 1e-9);
+    const cost = packs*price(p);
+    total += cost; regular += packs*reg;
+    lines.push({id:p, name, group, pack, unit, packs, used:q, left:packs*pack-q, util:q/(packs*pack), regular:reg, promo:promo!==null, cost});
+  }
+  lines.sort((a,b) => a.group.localeCompare(b.group,"uk") || a.name.localeCompare(b.name,"uk"));
+  const fresh = lines.filter(l => PERISHABLE.has(l.id));
+  const util = fresh.length ? fresh.reduce((s,l)=>s+l.used,0) / fresh.reduce((s,l)=>s+l.packs*l.pack,0) : 1;
+  return {lines, total, regular, saving:regular-total, per: chosen.length ? total/(S.people*chosen.length) : 0,
+          util, promo:lines.filter(l=>l.promo).length};
+}
+
+function fitBudget(chosen){
+  const likes = new Set(S.likes);
+  for (let k=0; k<10; k++){
+    const total = basket(chosen).total;
+    if (total <= S.budget) return chosen;
+    const used = new Set(chosen.map(c => c.r[0]));
+    let best = null;
+    for (const strict of [true,false]){
+      for (let i=0; i<chosen.length; i++){
+        for (const alt of RECIPES){
+          if (used.has(alt[0]) || !allowed(alt)) continue;
+          const lk = inter(alt[2], likes);
+          if (strict && !lk.length) continue;
+          const why = [...(lk.length ? [["g","♥ " + lk.join(", ")]] : []), ["","💰 дешевша заміна під бюджет"]];
+          const trial = chosen.slice(0,i).concat([{r:alt, why}], chosen.slice(i+1));
+          const t = basket(trial).total;
+          if (t < total && (!best || t < best[0])) best = [t, trial];
+        }
+      }
+      if (best) break;
+    }
+    if (!best) return chosen;
+    chosen = best[1];
+  }
+  return chosen;
+}
+
+// ---------- інтерфейс ----------
+const $ = id => document.getElementById(id);
+
+function applyPreset(i){
+  presetIdx = i;
+  const p = PRESETS[i];
+  S = {people:p.people, budget:p.budget, time:p.time, days:p.days,
+       likes:new Set(p.likes), dislikes:new Set(p.dislikes), liked:new Set(), excluded:new Set(), source:p.source};
+  prevMenu = [];
+  render();
+}
+function custom(){ presetIdx = -1; S.source = "Вподобання: налаштовано вручну."; }
+
+function chips(el, items, isOn, attr){
+  el.innerHTML = items.map(([v,label]) => `<button type="button" class="chip" aria-pressed="${isOn(v)}" data-${attr}="${esc(v)}">${esc(label)}</button>`).join("");
+}
+function renderSheet(){
+  $("o-people").textContent = S.people + " " + plural(S.people,"особа","особи","осіб");
+  const bud = BUDGETS.includes(S.budget) ? BUDGETS : [...BUDGETS, S.budget].sort((a,b)=>a-b);
+  chips($("c-budget"), bud.map(b => [b, uah(b)]), v => v===S.budget, "budget");
+  const times = TIMES.some(t => t[0]===S.time) ? TIMES : [...TIMES, [S.time, "до " + S.time + " хв"]].sort((a,b)=>a[0]-b[0]);
+  chips($("c-time"), times, v => v===S.time, "time");
+  chips($("c-days"), [3,4,5].map(n => [n, n + " " + plural(n,"вечеря","вечері","вечерь")]), v => v===S.days, "days");
+  chips($("c-likes"), LIKES, v => S.likes.has(v), "like");
+  chips($("c-dislikes"), Object.keys(DISLIKES).map(d => [d, d]), v => S.dislikes.has(v), "dislike");
+  $("q-ex").hidden = !S.excluded.size;
+  chips($("c-ex"), [...S.excluded].map(t => [t, "↺ " + t]), () => false, "ex");
+}
+
+function render(){
+  $("who").innerHTML = PRESETS.map((p,i) => `<button type="button" data-i="${i}" aria-pressed="${i===presetIdx}"><span class="e">${p.e}</span>${esc(p.short)}</button>`).join("")
+    + `<button type="button" data-custom aria-pressed="${presetIdx===-1}"><span class="e">✏️</span>Своє</button>`;
+  renderSheet();
+
+  const chosen = fitBudget(plan());
+  const b = basket(chosen);
+  const over = b.total > S.budget;
+
+  $("h-name").textContent = presetIdx >= 0 ? PRESETS[presetIdx].name : "Ваше меню";
+  $("h-sub").textContent = `${S.people} ${plural(S.people,"особа","особи","осіб")} · ${chosen.length} ${plural(chosen.length,"вечеря","вечері","вечерь")}`;
+  $("h-total").textContent = uah(b.total);
+  $("h-budget").textContent = "з " + uah(S.budget, false);
+  $("h-bar").style.width = Math.min(100, b.total/S.budget*100) + "%";
+  $("hero").classList.toggle("over", over);
+  $("h-over").hidden = !over;
+  $("h-over").textContent = over ? `Більше бюджету на ${uah(b.total - S.budget)}. Спробуйте менше вечерь або більший бюджет.` : "";
+  $("h-facts").innerHTML = chosen.length ? `<span class="fact">−${uah(b.saving)} завдяки акціям</span>
+    <span class="fact n">${uah(b.per)} за порцію</span>
+    <span class="fact n">${Math.round(b.util*100)}% свіжих продуктів у справі</span>` : "";
+
+  $("menu").innerHTML = chosen.length ? chosen.map(({r,why},i) => `
+    <article class="dish ${prevMenu.length && !prevMenu.includes(r[0]) ? "new" : ""}">
+      <div class="pic" aria-hidden="true">${r[5]}</div>
+      <div class="dbody"><div class="dday">${DAYS[i]} · ${r[1]} хв</div><h3>${esc(r[0])}</h3>
+        <div class="pills">${why.map(([c,t]) => `<span class="pill ${c}">${esc(t)}</span>`).join("")}</div></div>
+      <div class="dacts">
+        <button type="button" class="ibtn" data-like="${esc(r[0])}" aria-pressed="${S.liked.has(r[0])}" title="Подобається" aria-label="Подобається">${S.liked.has(r[0]) ? "❤️" : "🤍"}</button>
+        <button type="button" class="ibtn" data-swap="${esc(r[0])}" title="Замінити страву" aria-label="Замінити страву">🔄</button>
+      </div>
+    </article>`).join("")
+    : `<div class="empty">Під такі побажання страв не знайшлося 🙁<br><button class="link" type="button" data-open>Змінити налаштування</button></div>`;
+  if (chosen.length && chosen.length < S.days) $("menu").insertAdjacentHTML("beforeend",
+    `<div class="empty">Знайшлося ${chosen.length} з ${S.days}. <button class="link" type="button" data-open>Послабити обмеження</button></div>`);
+  prevMenu = chosen.map(c => c.r[0]);
+  setTimeout(() => document.querySelectorAll(".dish.new").forEach(d => d.classList.remove("new")), 900);
+
+  $("shop-sub").textContent = `${b.lines.length} ${plural(b.lines.length,"товар","товари","товарів")} · ${b.promo} зі знижкою`;
+  const groups = {};
+  b.lines.forEach(l => (groups[l.group] ||= []).push(l));
+  $("list").innerHTML = Object.entries(groups).map(([g,items]) => `<h4>${esc(g)}</h4>` + items.map(l => `
+    <div class="item"><div>${esc(l.name)}${l.packs > 1 ? " × " + l.packs : ""}
+      <small>${qty(l.pack,l.unit)}${PANTRY.has(l.id) && l.left > 0.5 ? " · лишиться " + qty(l.left,l.unit) : ""}</small></div>
+      <div class="price">${l.promo ? "<s>" + uah(l.regular*l.packs) + "</s><span class=sale>" + uah(l.cost) + "</span>" : uah(l.cost)}</div>
+    </div>`).join("")).join("");
+
+  $("d-total").textContent = uah(b.total);
+  $("d-save").textContent = b.saving > 0 ? "економія " + uah(b.saving) : "";
+  $("source").textContent = S.source;
+}
+
+let undo = null;
+function toast(msg, onUndo){
+  $("toast-t").textContent = msg;
+  $("toast-b").hidden = !onUndo; undo = onUndo;
+  $("toast").classList.add("show");
+  clearTimeout(toast.h); toast.h = setTimeout(() => $("toast").classList.remove("show"), onUndo ? 4500 : 2600);
+}
+$("toast-b").addEventListener("click", () => { if (undo) undo(); $("toast").classList.remove("show"); });
+
+const sheet = $("sheet");
+const openSheet = () => sheet.showModal();
+$("open").addEventListener("click", openSheet);
+$("close").addEventListener("click", () => sheet.close());
+sheet.addEventListener("click", e => { if (e.target === sheet) sheet.close(); });
+$("reset").addEventListener("click", () => { applyPreset(presetIdx >= 0 ? presetIdx : 0); });
+
+$("who").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.custom !== undefined){ custom(); render(); openSheet(); return; }
+  applyPreset(+b.dataset.i);
+});
+document.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => {
+  S.people = Math.max(1, Math.min(6, S.people + +b.dataset.step)); custom(); render();
+}));
+sheet.addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if (!c) return;
+  const d = c.dataset;
+  if (d.budget) S.budget = +d.budget;
+  else if (d.time) S.time = +d.time;
+  else if (d.days) S.days = +d.days;
+  else if (d.like){ S.likes.has(d.like) ? S.likes.delete(d.like) : S.likes.add(d.like);}
+  else if (d.dislike){ S.dislikes.has(d.dislike) ? S.dislikes.delete(d.dislike) : S.dislikes.add(d.dislike); }
+  else if (d.ex){ S.excluded.delete(d.ex); }
+  custom(); render();
+});
+$("menu").addEventListener("click", e => {
+  if (e.target.closest("[data-open]")) return openSheet();
+  const l = e.target.closest("[data-like]"), s = e.target.closest("[data-swap]");
+  if (l){ const t = l.dataset.like; const on = !S.liked.has(t); on ? S.liked.add(t) : S.liked.delete(t); render();
+    if (on) toast("Запам'ятали — пропонуватимемо частіше"); }
+  if (s){ const t = s.dataset.swap; S.excluded.add(t); S.liked.delete(t); render();
+    toast("Замінили «" + t + "»", () => { S.excluded.delete(t); render(); }); }
+});
+$("cta").addEventListener("click", () => toast("У пілоті тут відкривається готовий кошик у застосунку мережі"));
+
+applyPreset(0);
+</script>
+</body></html>
